@@ -12,6 +12,13 @@
       "The most biodiverse country in the world",
       "According to Frank Sinatra, they have a lot of coffee",
       "This country is the world's second largest coffee consumer"
+    ],
+    "grindTypes":[
+      "Espresso",
+      "Moka pot",
+      "Aeropress",
+      "Filter",
+      "Cafetiere"
     ]
   },
 
@@ -28,6 +35,13 @@
       "This country has their own coffee mascot",
       "The only country in South America that has both a Pacific and Caribbean coastline",
       "This country is the world's second largest flower exporter"
+    ],
+    "grindTypes":[
+      "Espresso",
+      "Moka pot",
+      "Aeropress",
+      "Filter",
+      "Cafetiere"
     ]
   },
 
@@ -44,6 +58,13 @@
       "Invented a drink with a base of brown sugar whipped with the first drops of espresso",
       "This country is home to the world's smallest bird",
       "This country is the largest island in the Caribbean"
+    ],
+    "grindTypes":[
+      "Espresso",
+      "Moka pot",
+      "Aeropress",
+      "Filter",
+      "Cafetiere"
     ]
   },
   {
@@ -59,6 +80,13 @@
       "The largest producer of African coffee",
       "Widely known as the birthplace of coffee",
       "The oldest country in Africa"
+    ],
+    "grindTypes":[
+      "Espresso",
+      "Moka pot",
+      "Aeropress",
+      "Filter",
+      "Cafetiere"
     ]
   },
   {
@@ -74,6 +102,13 @@
       "Home to the world's smallest volcano",
       "This country has the largest number of native Spanish speakers in the world",
       "This country is home to a traditional spiced coffee drink prepared in a clay pot"
+    ],
+    "grindTypes":[
+      "Espresso",
+      "Moka pot",
+      "Aeropress",
+      "Filter",
+      "Cafetiere"
     ]
   }
 ]

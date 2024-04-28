@@ -1,4 +1,4 @@
-//Heber almost had a hearth attach to make this work
+//information fetched from products.json stored in these arrays
 var productIDArray = [];
 var productNameArray = [];
 var beanTypeArray = [];
@@ -8,7 +8,9 @@ var imageLinkArray = [];
 var propertiesArray = [];
 var descriptionArray = [];
 var hintsArray=[];
+var grindTypesArray=[];
 
+//HTML for bootstrap cards on Products page
 var cardsContent = 
 `<div class="card">
     <img src="" class="card-img-top" alt="">
@@ -18,6 +20,7 @@ var cardsContent =
     <p class="card-text"></p>
 </div>`;
 
+//HTML for Bootstrap quiz card on products page
 var quizCardContent = 
 `<div class="card text-center" style="width: 18rem;">
   <img src="" class="card-img-top" alt="">
@@ -32,6 +35,7 @@ var quizCardContent =
 </div>`;
 
 $(document).ready(function () {
+  //get products info when loading each page
   $.getJSON("products.json", function (data) {
     $.each(data, function (index, value) {
       productIDArray.push(value.productID);
@@ -43,8 +47,12 @@ $(document).ready(function () {
       propertiesArray.push(value.properties);
       descriptionArray.push(value.description);
       hintsArray.push(value.hints);
+      grindTypesArray.push(value.grindTypes);
     });
   });
+
+  //Heber almost had a heart attack to make this work
+  //also known as importing navbar
   $("#main-navigation").load("navigation.html");
   setTimeout(() => {
     // Get the current page
@@ -70,12 +78,15 @@ function toggleDarkMode() {
   document.body.classList.toggle("dark-mode");
 }
 
+//onLoad function. Staying for now but can just externalise it and use defer later.
 function loadElements() {
   var username;
+  //check if username is already in localStorage, otherwise prompt for username
   if (localStorage.getItem("username") == null) {
     var nameSelection = confirm(
       "We would love to personalise your experience here just like we personalise your coffee! Would you like to give us your name?"
     );
+    //set username if there is an input, otherwise use default "Coffee Lover"
     if (nameSelection == true) {
       username = prompt("Please enter your name");
     } else {
@@ -86,21 +97,28 @@ function loadElements() {
   } else {
     username = localStorage.getItem("username");
   }
+
+  //populate username into relevant fields within the page
   if (document.getElementById("username") != null) {
     document.getElementById("username").innerHTML = username;
   } else {
     //pass
   }
+
+  //hide products on the products page
   if (document.getElementById("product-div") != null) {
     hideProducts();
   } else {
     //pass
   }
 }
+
+//load external header
 $(function () {
   $("#page-header").load("header.html");
 });
 
+//validate form input. This wants attention in fairness
 function formValidate() {
   var lettersAndDash = /^[A-Za-z-]+$/;
   var numbers = /^[0-9]+$/;
@@ -128,21 +146,30 @@ function formValidate() {
   }
 }
 
+//Function on the brewing page
 function letsGo() {
-  var grindArray = new Array("cafetiere", "aeropress", "percolator");
-  var beanTypeArray = new Array("Colombian", "Cuban", "Brazilian");
-  var grindSelection = Math.floor(Math.random() * 3 + 1);
-  document.getElementById("grind-beans").innerHTML = grindArray[grindSelection];
+  //add available grind types to drop-down menu
+  var grindSelection = Math.floor(Math.random() * (grindTypesArray.length) + 1);
 
-  var beanSelection = Math.floor(Math.random() * 3 + 1);
-  document.getElementById("bean-origin").innerHTML =
-    beanTypeArray[beanSelection];
+  for(i=0;i<grindTypesArray[grindSelection-1].length;i++){
+    const option = document.createElement("option");
+    option.value=grindTypesArray[grindSelection-1][i];
+    option.innerHTML=grindTypesArray[grindSelection-1][i];
+    document.getElementById("grind-beans").add(option);
+  }
+  
+  //roll a random product, display name and type of bean
+  var beanSelection = Math.floor(Math.random() * (beanTypeArray.length) + 1);
+  document.getElementById("bean-types").innerHTML = 
+    productNameArray[beanSelection] + "\r\n" + beanTypeArray[beanSelection];
 }
 
+//hide products function for products page
 function hideProducts() {
   document.getElementById("product-div").style.display = "none";
 }
 
+//show products function for products page; calls separate addCardContent function
 function showProducts() {
   var buttonText = document.getElementById("show-products-button").innerHTML;
 
@@ -161,6 +188,7 @@ function showProducts() {
   addCardContent();
 }
 
+//show products function for quiz part of products page, calls separate fillQuizCard function
 function takeFlight() {
   if(document.getElementById("card-group").innerHTML=="" && document.getElementById("journey-div").innerHTML==""){
     document.getElementById("product-div").style.display = "block";
@@ -174,65 +202,101 @@ function takeFlight() {
   }
 }
 
+//For quiz game on products page
 function fillQuizCard(){
-  
-  document.getElementById("journey-div").innerHTML=quizCardContent;
-    document.getElementsByClassName("card-title")[0].innerHTML="Guess the country";
-    var image = document.getElementsByClassName("card-img-top")[0];
-    var randomSelection = Math.floor(Math.random() * (imageLinkArray.length)+ 1);
-    console.log(randomSelection)
 
-    image.src=imageLinkArray[randomSelection-1];
-    for(i=0;i<hintsArray[randomSelection-1].length;i++){
+  //set up card 
+  document.getElementById("journey-div").innerHTML=quizCardContent;
+  document.getElementsByClassName("card-title")[0].innerHTML="Guess the country";
+  var image = document.getElementsByClassName("card-img-top")[0];
+    
+  //roll random number to select random product from products.json
+  var randomSelection = Math.floor(Math.random() * (imageLinkArray.length)+ 1);
+  console.log(randomSelection)
+
+  //add image of randomly selected product
+  image.src=imageLinkArray[randomSelection-1];
+
+  //add hints[][] for randomly selected product
+  for(i=0;i<hintsArray[randomSelection-1].length;i++){
       document.getElementsByClassName("card-text")[i].innerHTML=hintsArray[randomSelection-1][i];
+  }
+
+  //check user answer on click
+  document.getElementById("check-answer").addEventListener("click",function(){
+  
+    //check if user guess is correct
+    if(document.getElementById("user-guess").value==originArray[(randomSelection-1)]){
+      alert("You guessed it!")
+
+      //play again prompt
+      var again = confirm("Play again?");
+      
+      if(again){
+        fillQuizCard();
+      }
+        
+      else{
+        alert("Thanks for playing!")
+      }
     }
 
-    document.getElementById("check-answer").addEventListener("click",function(){
-      if(document.getElementById("user-guess").value==originArray[(randomSelection-1)]){
-        alert("You guessed it!")
-        var again = confirm("Play again?");
-        if(again){
-          fillQuizCard();
-        }
-        else{
-          alert("Thanks for playing!")
-        }
+    //incorrect user guess
+    else{
+      alert("Bad luck. It was "+originArray[randomSelection-1])
+      
+      //play again prompt
+      var again = confirm("Play again?");
+      
+      if(again){
+        fillQuizCard();
       }
       else{
-        alert("Bad luck. It was "+originArray[randomSelection-1])
-        var again = confirm("Play again?");
-        if(again){
-          fillQuizCard();
-        }
-        else{
-          alert("Thanks for playing!")
-        }
+        alert("Thanks for playing!")
       }
-    });
+    }
+  });
 }
 
+//addCardContent to populate product cards when user opts to show all products
 function addCardContent(){
+
+  //check if page content is empty
   if(document.getElementById("card-group").innerHTML==""&&document.getElementById("journey-div").innerHTML==""){
+    
+    //add & populate card for each product in products.json
     for(i=0;i<imageLinkArray.length;i++){
       document.getElementById("card-group").innerHTML+=cardsContent;
+      
+      //add image
       var image = document.getElementsByClassName("card-img-top")[i];
       image.src=imageLinkArray[i];
       image.alt=imageLinkArray[i];
+      //product name
       document.getElementsByClassName("card-title")[i].innerHTML=productNameArray[i];
+      //origin
       document.getElementsByClassName("card-subtitle mb-2 text-muted")[i].innerHTML=originArray[i];
+      //product description
       document.getElementsByClassName("card-text")[i].innerHTML=descriptionArray[i];
     }
   }
   else{
+    //if page content not empty, set it to empty
     document.getElementById("card-group").innerHTML="";
     document.getElementById("journey-div").innerHTML="";
+
+    //add & populate card for each product in products.json
     for(i=0;i<imageLinkArray.length;i++){
       document.getElementById("card-group").innerHTML+=cardsContent;
+      //product image
       var image = document.getElementsByClassName("card-img-top")[i];
       image.src=imageLinkArray[i];
       image.alt=imageLinkArray[i];
+      //product name
       document.getElementsByClassName("card-title")[i].innerHTML=productNameArray[i];
+      //origin
       document.getElementsByClassName("card-subtitle mb-2 text-muted")[i].innerHTML=originArray[i];
+      //product description
       document.getElementsByClassName("card-text")[i].innerHTML=descriptionArray[i];
     }
   } 
